@@ -9,4 +9,5 @@ WIP
 - From the repository root, create the environment by running `mamba env create -f environment.yaml`
 - Create the folder `$REPO_ROOT/data/raw` 
 - Download the raw data at `publications.parquet` to `$REPO_ROOT/data/raw/publications.parquet` 
-- Open this repository in VSCode and validate that the `eda.ipynb` notebook runs using the `citepred` environment 
+- Open this repository in VSCode and install the Python extension from Microsoft
+- Open the `eda.ipynb` notebook and run it using the `citepred` environment 
