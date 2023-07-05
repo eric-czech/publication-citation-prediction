@@ -17,7 +17,7 @@ repos:
     rev: v0.0.272
     hooks:
       - id: ruff
-        args: ["--fix", "--line-length=120"]
+        args: ["--fix"]
   - repo: https://github.com/python/black
     rev: 23.3.0
     hooks:
