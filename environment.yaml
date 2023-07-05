@@ -9,4 +9,9 @@ dependencies:
   - scikit-learn=1.3.0
   - plotly=5.15.0
   - jupyter=1.0.0
+  - spacy=3.5.4
+  - spacy-model-en_core_web_sm=3.5.0
   - pyarrow=12.0.1
+  - python-dotenv=1.0.0
+  pip: 
+    - openai==0.27.8
