@@ -27,5 +27,4 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies:
-        - numpy==1.24.3
-        - pandas==2.0.2
+        - pandas==2.0.3
