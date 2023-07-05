@@ -20,5 +20,3 @@ The variables currently necessary in `.env` are:
 ```bash
 OPENAI_API_KEY="xxxxx"
 ```
-
-

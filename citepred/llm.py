@@ -1,8 +1,9 @@
-from typing import Literal
-import re 
 import json
+import logging
+import re
+from typing import Literal
+
 import openai
-import logging 
 
 logger = logging.getLogger(__name__)
 
@@ -20,19 +21,27 @@ Do not include the original sentence or explanation of any kind.
 Sentiment classifications:
 """
 
-def get_sentiment(sentences: list[str], model="gpt-3.5-turbo") -> list[Literal["positive", "negative", "neutral", "unknown"]]:
-    clean_sentences = [re.sub('[\r\n]+', '', sentence) for sentence in sentences]
-    prompt = PROMPT_FORMAT.strip().format(sentences='\n'.join([f"{i+1}. {sentence}" for i, sentence in enumerate(clean_sentences)]))
+
+def get_sentiment(
+    sentences: list[str], model="gpt-3.5-turbo"
+) -> list[Literal["positive", "negative", "neutral", "unknown"] | None]:
+    clean_sentences = [re.sub("[\r\n]+", "", sentence) for sentence in sentences]
+    prompt = PROMPT_FORMAT.strip().format(
+        sentences="\n".join(
+            [f"{i+1}. {sentence}" for i, sentence in enumerate(clean_sentences)]
+        )
+    )
     logger.debug(f"Prompt:\n{prompt}")
-    chat_completion = openai.ChatCompletion.create(model=model, messages=[{"role": "user", "content": prompt}])
+    chat_completion = openai.ChatCompletion.create(
+        model=model, messages=[{"role": "user", "content": prompt}]
+    )
     response = chat_completion.choices[0].message.content
     logger.debug(f"Response:\n{response}")
     classifications = {
         (record := json.loads(e.strip()))["id"]: record["sentiment"]
         for e in response.split("\n")
-        if re.match('{"id": \d+, "sentiment": "(positive|negative|neutral|unknown)"}', e.strip())
+        if re.match(
+            '{"id": \d+, "sentiment": "(positive|negative|neutral|unknown)"}', e.strip()
+        )
     }
-    return [
-        classifications.get(i+1)
-        for i in range(len(sentences))
-    ]
+    return [classifications.get(i + 1) for i in range(len(sentences))]

@@ -6,8 +6,6 @@ from pathlib import Path
 class Paths:
     raw_data: Path
 
-def get_paths() -> Paths:
-    return Paths(
-        raw_data=Path(__file__).parent.parent / "data" / "raw"
-    )
 
+def get_paths() -> Paths:
+    return Paths(raw_data=Path(__file__).parent.parent / "data" / "raw")
