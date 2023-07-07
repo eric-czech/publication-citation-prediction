@@ -13,6 +13,6 @@ dependencies:
   - spacy-model-en_core_web_sm=3.5.0
   - pyarrow=12.0.1
   - python-dotenv=1.0.0
-  pip: 
+  - pip: 
     - openai==0.27.8
     - pre-commit==3.3.3
