@@ -1,7 +1,6 @@
 import json
 import logging
 import re
-import os
 from typing import Literal
 
 import openai
