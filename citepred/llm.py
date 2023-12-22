@@ -8,6 +8,52 @@ import openai
 logger = logging.getLogger(__name__)
 
 
+def get_innovation(
+    sentences: list[str], model="gpt-3.5-turbo"
+) -> list[int]:
+    prompt_format = """
+    Classify the sentiment of the following sentences from published scientific articles as either "innovative", "non-innovative", "neutral", or "unknown":
+
+    --- BEGIN SENTENCES ---
+    {sentences}
+    --- END SENTENCES ---
+
+    Report the sentement classification of each sentence on a new line with only its corresponding numbered identifier as a JSON object with the format `{{"id": $id, "sentiment": $sentiment}}`.
+
+    Do not include the original sentence or explanation of any kind.
+
+    Sentiment classifications:
+    """
+    classifications = test_sentences(
+        prompt_format, sentences, response_re_type="(innovative|non-innovative|neutral|unknown)", response_name="innovation", model="gpt-3.5-turbo"
+    )
+    return [classifications.get(i + 1) for i in range(len(sentences))]
+
+
+
+def get_surprise(
+    sentences: list[str], model="gpt-3.5-turbo"
+) -> list[Literal["surprised, unsurprised, neutral, unknown"]]:
+    prompt_format = """
+    Classify the sentiment of the following sentences from published scientific articles as either "surprised", "unsurprised", "neutral", or "unknown":
+
+    --- BEGIN SENTENCES ---
+    {sentences}
+    --- END SENTENCES ---
+
+    Report the sentement classification of each sentence on a new line with only its corresponding numbered identifier as a JSON object with the format `{{"id": $id, "surprise": $surprise}}`.
+
+    Do not include the original sentence or explanation of any kind.
+
+    Sentiment classifications:
+    """
+    classifications = test_sentences(
+        prompt_format, sentences, response_re_type="(surprised|unsurprised|neutral|unknown)", response_name="surprise", model="gpt-3.5-turbo"
+    )
+    return [classifications.get(i + 1) for i in range(len(sentences))]
+
+    
+
 def get_sentiment(
     sentences: list[str], model="gpt-3.5-turbo"
 ) -> list[Literal["positive", "negative", "neutral", "unknown"] | None]:
@@ -30,10 +76,12 @@ def get_sentiment(
     return [classifications.get(i + 1) for i in range(len(sentences))]
 
 
+
 def get_readability(
     sentences: list[str], model="gpt-3.5-turbo"
 ) -> list[int]:
     prompt_format = """
+    Classify the following sentences as either 
     Find the Flesch reading ease score of the following sentences from published scientific articles:
 
     --- BEGIN SENTENCES ---
@@ -52,10 +100,13 @@ def get_readability(
     return [scores.get(i + 1) for i in range(len(sentences))]
 
 
+
 def test_sentences(
     prompt_format: str, sentences: list[str], response_re_type: str, response_name: str, model: str
 ) -> dict[str, str]:
+    logger.debug(f"sentences:\n{sentences}")
     clean_sentences = [re.sub("[\r\n]+", "", sentence) for sentence in sentences]
+    logger.debug(f"Clean Sentences:\n{clean_sentences}")
     prompt = prompt_format.strip().format(
         sentences = "\n".join(
             [f'{i+1}. {sentence}' for i, sentence in enumerate(clean_sentences)]
